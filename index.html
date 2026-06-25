@@ -27,8 +27,8 @@
     background: var(--bg-deep);
     color: var(--white);
     font-family: 'Manrope', 'Helvetica Neue', Arial, sans-serif;
-    min-height: 100vh;
-    overflow-x: hidden;
+    height: 100vh;
+    overflow: hidden;
   }
 
   body{
@@ -39,7 +39,22 @@
     display:flex;
     flex-direction:column;
     align-items:center;
-    min-height:100vh;
+    justify-content: center;
+    height: 100vh;
+    padding: 2vh 0;
+  }
+
+  @media (max-width: 600px){
+    html, body{
+      height: auto;
+      min-height: 100vh;
+      overflow-y: auto;
+      overflow-x: hidden;
+    }
+    body{
+      justify-content: flex-start;
+      padding: 24px 0;
+    }
   }
 
   /* ---------- HERO ---------- */
@@ -47,12 +62,20 @@
   .hero{
     position:relative;
     width:100%;
-    max-width: 620px;
-    margin-top: clamp(36px, 6vw, 64px);
+    max-width: min(620px, 38vh);
+    margin-top: 0;
     padding: 0 32px;
     perspective: 1400px;
     display:flex;
     justify-content:center;
+    flex-shrink: 0;
+  }
+
+  @media (max-width: 600px){
+    .hero{
+      max-width: 420px;
+      margin-top: 8px;
+    }
   }
 
   .hero-glow{
@@ -87,43 +110,104 @@
     display:block;
     filter: drop-shadow(0 30px 50px rgba(0,0,0,0.55));
     will-change: transform;
+    position: relative;
+  }
+
+  /* camada de luz que reage ao mouse, simulando reflexo sobre as dobras do tecido */
+  .cloth-light{
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.4s ease-out;
+    background: radial-gradient(
+      circle 280px at 50% 50%,
+      rgba(255,255,255,1) 0%,
+      rgba(230,210,255,0.7) 30%,
+      rgba(160,110,255,0.25) 55%,
+      transparent 78%
+    );
+    mix-blend-mode: overlay;
+    /* usa a própria imagem como máscara, restringindo a luz à silhueta do pano */
+    -webkit-mask-image: var(--cloth-mask);
+    mask-image: var(--cloth-mask);
+    -webkit-mask-size: 100% 100%;
+    mask-size: 100% 100%;
+    -webkit-mask-repeat: no-repeat;
+    mask-repeat: no-repeat;
+  }
+
+  .cloth-light.is-active{
+    opacity: 1;
   }
 
   /* ---------- TITLE ---------- */
 
   .title{
     text-align:center;
-    margin-top: clamp(28px, 5vw, 44px);
+    margin-top: 2.2vh;
     padding: 0 20px;
     font-family: 'Manrope', sans-serif;
     font-weight: 700;
-    font-size: 48px;
+    font-size: clamp(22px, 4.2vh, 48px);
     letter-spacing: 0.18em;
     text-transform: uppercase;
     color: #FFFFFF;
     line-height: 1.3;
     max-width: 1100px;
     text-shadow: 0 0 12px rgba(255,255,255,0.12);
+    flex-shrink: 0;
+    position: relative;
+    cursor: default;
+  }
+
+  /* camada de brilho que segue o cursor, recortada na forma das letras */
+  .title-glow{
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background: radial-gradient(
+      circle 160px at var(--gx, 50%) var(--gy, 50%),
+      rgba(255,255,255,1) 0%,
+      rgba(220,190,255,0.95) 40%,
+      transparent 75%
+    );
+    background-clip: text;
+    -webkit-background-clip: text;
+    color: transparent;
+    -webkit-text-fill-color: transparent;
+    opacity: 0;
+    transition: opacity 0.35s ease-out;
+    filter: blur(6px) brightness(2.2);
+  }
+
+  .title:hover .title-glow{
+    opacity: 1;
   }
 
   .subtitle{
     text-align:center;
-    margin-top: 12px;
+    margin-top: 0.8vh;
     padding: 0 24px;
     font-family: 'Manrope', sans-serif;
     font-weight: 500;
-    font-size: 30px;
+    font-size: clamp(15px, 2.6vh, 30px);
     color: #B987FF;
     letter-spacing: 0.02em;
-  }
-
-  @media (max-width: 1024px){
-    .title{ font-size: 42px; }
+    flex-shrink: 0;
   }
 
   @media (max-width: 600px){
-    .title{ font-size: 32px; letter-spacing: 0.12em; }
-    .subtitle{ font-size: 22px; }
+    .title{
+      font-size: 30px;
+      letter-spacing: 0.12em;
+      margin-top: 28px;
+    }
+    .subtitle{
+      font-size: 19px;
+      margin-top: 10px;
+    }
   }
 
   /* ---------- COUNTDOWN ---------- */
@@ -133,16 +217,17 @@
     justify-content:center;
     align-items:stretch;
     gap: clamp(8px, 2vw, 16px);
-    margin-top: clamp(32px, 6vw, 52px);
+    margin-top: 2.6vh;
     padding: 0 16px;
     flex-wrap: nowrap;
+    flex-shrink: 0;
   }
 
   .unit-card{
     background: var(--card-bg);
     border: 1px solid var(--card-border);
     border-radius: 16px;
-    padding: clamp(14px, 3vw, 22px) clamp(12px, 3.4vw, 26px);
+    padding: clamp(10px, 2.2vh, 22px) clamp(12px, 3.4vw, 26px);
     display:flex;
     flex-direction:column;
     align-items:center;
@@ -156,17 +241,17 @@
   .unit-number{
     font-family: 'Manrope', sans-serif;
     font-weight: 800;
-    font-size: 82px;
+    font-size: clamp(28px, min(7vh, 11vw), 82px);
     line-height: 1;
     color: #FFFFFF;
     font-variant-numeric: tabular-nums;
   }
 
   .unit-label{
-    margin-top: 10px;
+    margin-top: 0.8vh;
     font-family: 'Manrope', sans-serif;
     font-weight: 600;
-    font-size: 15px;
+    font-size: clamp(9px, 1.3vh, 15px);
     letter-spacing: 0.30em;
     text-transform: uppercase;
     color: #B987FF;
@@ -176,19 +261,25 @@
     align-self: center;
     font-family: 'Manrope', sans-serif;
     font-weight: 800;
-    font-size: clamp(24px, 5vw, 44px);
+    font-size: clamp(20px, 4vh, 44px);
     color: var(--lilac);
     opacity: 0.6;
   }
 
-  @media (max-width: 1024px){
-    .unit-number{ font-size: 64px; }
-    .unit-label{ font-size: 13px; letter-spacing: 0.24em; }
-  }
-
   @media (max-width: 600px){
-    .unit-number{ font-size: 38px; }
-    .unit-label{ font-size: 10px; letter-spacing: 0.18em; }
+    .unit-card{ padding: 12px 10px; }
+    .unit-number{ font-size: 9.5vw; }
+    .unit-label{
+      margin-top: 6px;
+      font-size: 10px;
+      letter-spacing: 0.18em;
+    }
+    .colon{ font-size: 28px; }
+    .progress-wrap{ margin-top: 28px; }
+    .date-line{
+      margin-top: 14px;
+      font-size: 15px;
+    }
   }
 
   /* ---------- DIVIDER + DATE ---------- */
@@ -203,19 +294,16 @@
   }
 
   .date-line{
-    margin-top: 22px;
-    margin-bottom: 64px;
+    margin-top: 1.6vh;
+    margin-bottom: 0;
     display:flex;
     align-items:center;
     gap: 10px;
     font-family: 'Manrope', sans-serif;
     font-weight: 500;
-    font-size: 24px;
+    font-size: clamp(13px, 2.1vh, 24px);
     color: rgba(255,255,255,0.85);
-  }
-
-  @media (max-width: 600px){
-    .date-line{ font-size: 16px; }
+    flex-shrink: 0;
   }
 
   .date-line svg{
@@ -241,10 +329,11 @@
   .progress-wrap{
     width: 80%;
     max-width: 560px;
-    margin: clamp(36px, 6vw, 52px) auto 0;
+    margin: 2.2vh auto 0;
     display: flex;
     align-items: center;
     height: 24px;
+    flex-shrink: 0;
   }
 
   .progress-track{
@@ -356,13 +445,17 @@
   <div class="hero">
     <div class="hero-glow"></div>
     <div class="cloth-reveal">
-      <div class="cloth-wrap" id="clothWrap">
+      <div class="cloth-wrap" id="clothWrap" style="--cloth-mask: url('https://raw.githubusercontent.com/nathmenali/maccontagemregressiva/main/Pano%20surpresa%20transparente.png');">
         <img src="https://raw.githubusercontent.com/nathmenali/maccontagemregressiva/main/Pano%20surpresa%20transparente.png" alt="Pano de seda suspenso, em espera">
+        <div class="cloth-light" id="clothLight"></div>
       </div>
     </div>
   </div>
 
-  <h1 class="title">Você vai querer ver isso.</h1>
+  <h1 class="title" id="titleEl">
+    Você vai querer ver isso.
+    <span class="title-glow" aria-hidden="true">Você vai querer ver isso.</span>
+  </h1>
   <p class="subtitle">Em breve.</p>
 
   <div class="countdown" id="countdown">
@@ -456,11 +549,14 @@
 
   // ---------- Movimento do pano com o mouse ----------
   const clothWrap = document.getElementById('clothWrap');
+  const clothLight = document.getElementById('clothLight');
   const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
   if (!prefersReducedMotion) {
     let targetRotX = 0, targetRotY = 0;
     let currentRotX = 0, currentRotY = 0;
+    let targetLightX = 50, targetLightY = 50;
+    let currentLightX = 50, currentLightY = 50;
 
     const maxTilt = 16; // graus de inclinação do pano
 
@@ -474,11 +570,18 @@
 
       targetRotY = nx * maxTilt;
       targetRotX = -ny * maxTilt;
+
+      // posição da luz acompanha o cursor diretamente (em %)
+      targetLightX = px * 100;
+      targetLightY = py * 100;
+
+      clothLight.classList.add('is-active');
     }
 
     function resetMove(){
       targetRotX = 0;
       targetRotY = 0;
+      clothLight.classList.remove('is-active');
     }
 
     clothWrap.addEventListener('mousemove', (e) => handleMove(e.clientX, e.clientY));
@@ -494,12 +597,33 @@
       const ease = 0.12;
       currentRotX += (targetRotX - currentRotX) * ease;
       currentRotY += (targetRotY - currentRotY) * ease;
+      currentLightX += (targetLightX - currentLightX) * 0.18;
+      currentLightY += (targetLightY - currentLightY) * 0.18;
 
       clothWrap.style.transform = `rotateX(${currentRotX}deg) rotateY(${currentRotY}deg)`;
+      clothLight.style.background = `radial-gradient(
+        circle 280px at ${currentLightX}% ${currentLightY}%,
+        rgba(255,255,255,1) 0%,
+        rgba(230,210,255,0.7) 30%,
+        rgba(160,110,255,0.25) 55%,
+        transparent 78%
+      )`;
 
       requestAnimationFrame(animate);
     }
     requestAnimationFrame(animate);
+  }
+
+  // ---------- Glow local no título, seguindo o cursor ----------
+  const titleEl = document.getElementById('titleEl');
+  if (titleEl && !prefersReducedMotion) {
+    titleEl.addEventListener('mousemove', (e) => {
+      const rect = titleEl.getBoundingClientRect();
+      const gx = ((e.clientX - rect.left) / rect.width) * 100;
+      const gy = ((e.clientY - rect.top) / rect.height) * 100;
+      titleEl.style.setProperty('--gx', gx + '%');
+      titleEl.style.setProperty('--gy', gy + '%');
+    });
   }
 </script>
 
