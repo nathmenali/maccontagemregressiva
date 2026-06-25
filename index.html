@@ -68,6 +68,12 @@
     pointer-events:none;
   }
 
+  .cloth-reveal{
+    position: relative;
+    width: 100%;
+    transform-style: preserve-3d;
+  }
+
   .cloth-wrap{
     position:relative;
     width:100%;
@@ -321,7 +327,7 @@
   }
 
   @media (prefers-reduced-motion: no-preference){
-    .cloth-wrap{
+    .cloth-reveal{
       animation: reveal 1.3s cubic-bezier(0.16, 1, 0.3, 1) both;
     }
     .title, .subtitle, .countdown, .progress-wrap, .date-line{
@@ -349,8 +355,10 @@
 
   <div class="hero">
     <div class="hero-glow"></div>
-    <div class="cloth-wrap" id="clothWrap">
-      <img src="https://raw.githubusercontent.com/nathmenali/maccontagemregressiva/main/Pano%20surpresa%20transparente.png" alt="Pano de seda suspenso, em espera">
+    <div class="cloth-reveal">
+      <div class="cloth-wrap" id="clothWrap">
+        <img src="https://raw.githubusercontent.com/nathmenali/maccontagemregressiva/main/Pano%20surpresa%20transparente.png" alt="Pano de seda suspenso, em espera">
+      </div>
     </div>
   </div>
 
@@ -454,7 +462,7 @@
     let targetRotX = 0, targetRotY = 0;
     let currentRotX = 0, currentRotY = 0;
 
-    const maxTilt = 10; // graus de inclinação do pano
+    const maxTilt = 16; // graus de inclinação do pano
 
     function handleMove(clientX, clientY){
       const rect = clothWrap.getBoundingClientRect();
@@ -483,7 +491,7 @@
     clothWrap.addEventListener('touchend', resetMove);
 
     function animate(){
-      const ease = 0.08;
+      const ease = 0.12;
       currentRotX += (targetRotX - currentRotX) * ease;
       currentRotY += (targetRotY - currentRotY) * ease;
 
