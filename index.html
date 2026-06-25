@@ -312,6 +312,21 @@
     flex-shrink: 0;
   }
 
+  .footer-logo{
+    margin-top: 2.2vh;
+    height: clamp(16px, 2.6vh, 28px);
+    width: auto;
+    opacity: 0.55;
+    flex-shrink: 0;
+  }
+
+  @media (max-width: 600px){
+    .footer-logo{
+      margin-top: 18px;
+      height: 20px;
+    }
+  }
+
   .ended-state{
     display:none;
     text-align:center;
@@ -498,6 +513,8 @@
     </svg>
     05 de agosto de 2026 &nbsp;&bull;&nbsp; 14h
   </p>
+
+  <img src="https://raw.githubusercontent.com/nathmenali/maccontagemregressiva/main/MAC_H2.png" alt="Mackenzie Academia Corporativa" class="footer-logo">
 
 <script>
   // Data final: 05/08/2026, 14h (horário local do navegador)
